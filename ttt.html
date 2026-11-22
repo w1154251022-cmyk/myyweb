@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>蕭秀靜 TTT | 個人官方網站 & 作品集</title>
+    <!-- 引入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Google Fonts: Noto Sans TC 與 Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <!-- 引入 Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'Noto Sans TC', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            900: '#4c1d95',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* 自訂編輯模式時的視覺提示 */
+        body.edit-mode-active [data-editable="true"] {
+            outline: 2px dashed #7c3aed;
+            outline-offset: 4px;
+            border-radius: 6px;
+            cursor: text;
+            transition: all 0.2s ease;
+        }
+        body.edit-mode-active [data-editable="true"]:hover,
+        body.edit-mode-active [data-editable="true"]:focus {
+            outline: 2px solid #6d28d9;
+            background-color: rgba(124, 58, 237, 0.08);
+        }
+        /* 漸層文字效果 */
+        .text-gradient {
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300 antialiased selection:bg-violet-500 selection:text-white">
+
+    <!-- 頂部導覽列 -->
+    <header class="sticky top-0 z-40 w-full backdrop-blur-md bg-white/80 dark:bg-slate-900/80 border-b border-slate-200/80 dark:border-slate-800/80 transition-colors">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <!-- Logo / 品牌名稱 -->
+            <a href="#" class="flex items-center gap-2.5 group">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-violet-600 to-fuchsia-500 flex items-center justify-center text-white font-bold text-lg shadow-md shadow-violet-500/20 group-hover:scale-105 transition-transform">
+                    蕭
+                </div>
+                <span class="font-bold text-lg tracking-tight text-slate-900 dark:text-white" data-editable="true">蕭秀靜 TTT</span>
+            </a>
+
+            <!-- 桌面版導覽連結 -->
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600 dark:text-slate-300">
+                <a href="#about" class="hover:text-violet-600 dark:hover:text-violet-400 transition-colors">關於我</a>
+                <a href="#skills" class="hover:text-violet-600 dark:hover:text-violet-400 transition-colors">核心專長</a>
+                <a href="#experience" class="hover:text-violet-600 dark:hover:text-violet-400 transition-colors">經歷與作品</a>
+                <a href="#contact" class="hover:text-violet-600 dark:hover:text-violet-400 transition-colors">聯絡方式</a>
+            </nav>
+
+            <!-- 右側功能按鈕群：深淺色切換 + 編輯網頁 + 匯出 HTML -->
+            <div class="flex items-center gap-2 sm:gap-2.5">
+                <!-- 深淺色切換 -->
+                <button id="themeToggle" aria-label="切換深淺色模式" class="p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition-colors" title="切換深淺色模式">
+                    <i data-lucide="sun" class="w-4 h-4 hidden dark:block"></i>
+                    <i data-lucide="moon" class="w-4 h-4 block dark:hidden"></i>
+                </button>
+
+                <!-- 即時編輯模式按鈕 -->
+                <button id="editModeBtn" class="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs sm:text-sm font-medium bg-slate-900 hover:bg-slate-800 text-white dark:bg-violet-600 dark:hover:bg-violet-500 shadow-sm transition-all">
+                    <i data-lucide="edit-3" class="w-4 h-4"></i>
+                    <span id="editModeText">編輯網頁</span>
+                </button>
+
+                <!-- 匯出 HTML 按鈕 -->
+                <button id="headerExportBtn" class="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-violet-50 hover:bg-violet-100 dark:bg-slate-800 dark:hover:bg-slate-700 text-violet-700 dark:text-violet-300 border border-violet-200/80 dark:border-slate-700 transition-all" title="下載目前網頁為獨立 HTML 檔案">
+                    <i data-lucide="download" class="w-4 h-4"></i>
+                    <span class="hidden sm:inline">匯出 HTML</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 編輯模式專屬控制列（預設隱藏） -->
+    <div id="editToolbar" class="hidden sticky top-16 z-30 bg-violet-600 text-white shadow-lg">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-2 text-sm">
+                <span class="inline-flex h-2.5 w-2.5 rounded-full bg-emerald-300 animate-pulse"></span>
+                <span><strong>即時編輯模式已開啟：</strong>直接點擊頁面上有虛線框的文字即可修改內容。</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <button id="changeAvatarBtn" class="px-3 py-1.5 rounded-lg bg-white/15 hover:bg-white/25 text-xs sm:text-sm font-medium flex items-center gap-1.5 transition-colors">
+                    <i data-lucide="image" class="w-4 h-4"></i>
+                    更換大頭貼網址
+                </button>
+                <button id="exportHtmlBtn" class="px-3.5 py-1.5 rounded-lg bg-white text-violet-700 hover:bg-violet-50 text-xs sm:text-sm font-bold flex items-center gap-1.5 shadow-sm transition-colors">
+                    <i data-lucide="download" class="w-4 h-4"></i>
+                    匯出更新後的 HTML
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <main>
+        <!-- 1. 個人簡介 Hero 區塊 -->
+        <section class="relative overflow-hidden pt-16 pb-20 sm:pt-24 sm:pb-28">
+            <!-- 背景裝飾光暈 -->
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-96 bg-gradient-to-tr from-violet-500/15 via-fuchsia-500/10 to-indigo-500/15 blur-3xl -z-10 rounded-full pointer-events-none"></div>
+
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-col-reverse lg:flex-row items-center justify-between gap-12">
+                    <!-- 左側文字介紹 -->
+                    <div class="flex-1 text-center lg:text-left space-y-6">
+                        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-violet-50 dark:bg-violet-950/60 border border-violet-200/80 dark:border-violet-800/80 text-violet-700 dark:text-violet-300 text-xs sm:text-sm font-semibold">
+                            <span class="w-2 h-2 rounded-full bg-violet-600 dark:bg-violet-400"></span>
+                            <span data-editable="true">歡迎交流合作 · 品牌與專案諮詢開放中</span>
+                        </div>
+
+                        <div class="space-y-3">
+                            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-slate-900 dark:text-white leading-tight">
+                                你好，我是 <span class="bg-gradient-to-r from-violet-600 to-fuchsia-500 dark:from-violet-400 dark:to-fuchsia-400 text-gradient" data-editable="true">蕭秀靜 TTT</span>
+                            </h1>
+                            <p class="text-lg sm:text-xl font-semibold text-slate-600 dark:text-slate-300" data-editable="true">
+                                品牌策略企劃 / 創意整合與專業專案顧問
+                            </p>
+                        </div>
+
+                        <p class="text-base sm:text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto lg:mx-0 leading-relaxed" data-editable="true">
+                            專注於傾聽需求、發掘獨特價值，並將抽象構想轉化為具體可執行的品牌與專案成果。結合細膩的溝通協調與系統化管理，陪伴合作夥伴穩健成長。
+                        </p>
+
+                        <!-- 行動呼籲與社群連結 -->
+                        <div class="pt-2 flex flex-wrap items-center justify-center lg:justify-start gap-4">
+                            <a href="#contact" class="px-6 py-3.5 rounded-xl bg-violet-600 hover:bg-violet-700 text-white font-semibold shadow-lg shadow-violet-600/25 hover:-translate-y-0.5 transition-all flex items-center gap-2">
+                                <i data-lucide="send" class="w-4 h-4"></i>
+                                <span>聯絡我</span>
+                            </a>
+                            <a href="#experience" class="px-6 py-3.5 rounded-xl bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200 font-semibold border border-slate-200 dark:border-slate-800 shadow-sm hover:-translate-y-0.5 transition-all">
+                                瀏覽作品
+                            </a>
+                        </div>
+
+                        <!-- 社群媒體圖示列 -->
+                        <div class="pt-4 flex items-center justify-center lg:justify-start gap-3">
+                            <span class="text-xs font-medium text-slate-400 uppercase tracking-wider mr-1">社群連結</span>
+                            <a href="#contact" title="Facebook / 粉絲專頁" class="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:border-blue-300 transition-all">
+                                <i data-lucide="facebook" class="w-5 h-5"></i>
+                            </a>
+                            <a href="#contact" title="Instagram / 生活與作品" class="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-pink-600 dark:hover:text-pink-400 hover:border-pink-300 transition-all">
+                                <i data-lucide="instagram" class="w-5 h-5"></i>
+                            </a>
+                            <a href="#contact" title="LinkedIn / 專業檔案" class="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-violet-600 dark:hover:text-violet-400 hover:border-violet-300 transition-all">
+                                <i data-lucide="linkedin" class="w-5 h-5"></i>
+                            </a>
+                            <a href="#contact" title="個人網站 / 作品集" class="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:border-slate-400 transition-all">
+                                <i data-lucide="globe" class="w-5 h-5"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- 右側個人形象照區塊 -->
+                    <div class="relative flex-shrink-0">
+                        <div class="w-64 h-64 sm:w-80 sm:h-80 rounded-3xl p-2 bg-gradient-to-tr from-violet-600 via-fuchsia-500 to-indigo-500 shadow-2xl shadow-violet-500/20 rotate-2 hover:rotate-0 transition-transform duration-300">
+                            <img id="profileAvatar"
+                                 src="https://placehold.co/600x600/2e1065/f8fafc?text=%E8%95%AD%E7%A7%80%E9%9D%9C+TTT"
+                                 onerror="this.src='https://placehold.co/600x600/2e1065/f8fafc?text=%E8%95%AD%E7%A7%80%E9%9D%9C+TTT'"
+                                 alt="蕭秀靜 TTT 個人照片"
+                                 class="w-full h-full object-cover rounded-2xl bg-slate-900">
+                        </div>
+                        <!-- 浮動資訊徽章 -->
+                        <div class="absolute -bottom-4 -left-4 sm:-left-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-4 py-3 rounded-2xl shadow-xl flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-violet-500/10 text-violet-600 dark:text-violet-400 flex items-center justify-center">
+                                <i data-lucide="sparkles" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs text-slate-500 dark:text-slate-400" data-editable="true">核心精神</p>
+                                <p class="text-sm font-bold text-slate-900 dark:text-white" data-editable="true">專業溫度 · 精準執行</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. 關於我與核心專長區塊 -->
+        <section id="about" class="py-20 bg-white dark:bg-slate-900/50 border-y border-slate-200/70 dark:border-slate-800/70">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+                <!-- 關於我介紹 -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+                    <div class="lg:col-span-5 space-y-4">
+                        <span class="text-sm font-bold tracking-wider uppercase text-violet-600 dark:text-violet-400">ABOUT ME</span>
+                        <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white" data-editable="true">關於蕭秀靜 TTT</h2>
+                        <p class="text-slate-600 dark:text-slate-400 leading-relaxed" data-editable="true">
+                            你好！我是蕭秀靜 TTT。在多年的專業歷練中，我始終秉持「真誠傾聽、用心規劃、踏實落地」的態度，擅長在多元專案與跨領域合作中梳理脈絡、整合資源，為每一位客戶與團隊創造清晰且具溫度的價值。
+                        </p>
+                    </div>
+
+                    <!-- 個人亮點數據卡片（3 個核心數據亮點） -->
+                    <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="p-6 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 space-y-2">
+                            <div class="text-3xl font-black text-violet-600 dark:text-violet-400" data-editable="true">6+ 年</div>
+                            <div class="text-sm font-semibold text-slate-800 dark:text-slate-200" data-editable="true">實戰專案經驗</div>
+                            <p class="text-xs text-slate-500 dark:text-slate-400" data-editable="true">深耕企劃執行與整合</p>
+                        </div>
+                        <div class="p-6 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 space-y-2">
+                            <div class="text-3xl font-black text-fuchsia-600 dark:text-fuchsia-400" data-editable="true">40+ 家</div>
+                            <div class="text-sm font-semibold text-slate-800 dark:text-slate-200" data-editable="true">合作夥伴與客戶</div>
+                            <p class="text-xs text-slate-500 dark:text-slate-400" data-editable="true">建立長期信賴合作關係</p>
+                        </div>
+                        <div class="p-6 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 space-y-2">
+                            <div class="text-3xl font-black text-emerald-600 dark:text-emerald-400" data-editable="true">8+ 項</div>
+                            <div class="text-sm font-semibold text-slate-800 dark:text-slate-200" data-editable="true">專業認證與進修</div>
+                            <p class="text-xs text-slate-500 dark:text-slate-400" data-editable="true">持續精進跨領域知識</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 核心專長與技能卡片 -->
+                <div id="skills" class="space-y-8 pt-4">
+                    <div class="text-center max-w-2xl mx-auto space-y-3">
+                        <span class="text-sm font-bold tracking-wider uppercase text-violet-600 dark:text-violet-400">CORE EXPERTISE</span>
+                        <h3 class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white" data-editable="true">核心專長與服務項目</h3>
+                        <p class="text-sm sm:text-base text-slate-600 dark:text-slate-400" data-editable="true">結合策略思維、品牌美學與高效協調力，提供全方位的專業支援</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- 專長卡片 1 -->
+                        <div class="p-7 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:border-violet-500/50 transition-all group">
+                            <div class="w-12 h-12 rounded-xl bg-violet-600/10 text-violet-600 dark:text-violet-400 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+                                <i data-lucide="compass" class="w-6 h-6"></i>
+                            </div>
+                            <h4 class="text-xl font-bold text-slate-900 dark:text-white mb-2" data-editable="true">品牌企劃與策略定位</h4>
+                            <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed mb-4" data-editable="true">
+                                協助梳理核心優勢與目標客群，制定清晰的溝通策略與視覺呈現方向，強化品牌辨識度。
+                            </p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-2.5 py-1 text-xs font-medium rounded-lg bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700" data-editable="true">市場洞察</span>
+                                <span class="px-2.5 py-1 text-xs font-medium rounded-lg bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700" data-editable="true">內容行銷</span>
+                                <span class="px-2.5 py-1 text-xs font-medium rounded-lg bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700" data-editable="true">提案簡報</span>
+                            </div>
+                        </div>
+
+                        <!-- 專長卡片 2 -->
+                        <div class="p-7 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:border-fuchsia-500/50 transition-all group">
+                            <div class="w-12 h-12 rounded-xl bg-fuchsia-600/10 text-fuchsia-600 dark:text-fuchsia-400 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+                                <i data-lucide="layers" class="w-6 h-6"></i>
+                            </div>
+                            <h4 class="text-xl font-bold text-slate-900 dark:text-white mb-2" data-editable="true">專案統籌與活動執行</h4>
+                            <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed mb-4" data-editable="true">
+                                具備完整專案管理經驗，從前期需求訪談、時程控管到現場執行與成效追蹤，確保高標準交付。
+                            </p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-2.5 py-1 text-xs font-medium rounded-lg bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700" data-editable="true">進度控管</span>
+                                <span class="px-2.5 py-1 text-xs font-medium rounded-lg bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700" data-editable="true">資源整合</span>
+                                <span class="px-2.5 py-1 text-xs font-medium rounded-lg bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700" data-editable="true">品質把關</span>
+                            </div>
+                        </div>
+
+                        <!-- 專長卡片 3 -->
+                        <div class="p-7 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:border-emerald-500/50 transition-all group">
+                            <div class="w-12 h-12 rounded-xl bg-emerald-600/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+                                <i data-lucide="heart-handshake" class="w-6 h-6"></i>
+                            </div>
+                            <h4 class="text-xl font-bold text-slate-900 dark:text-white mb-2" data-editable="true">跨界溝通與顧問諮詢</h4>
+                            <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed mb-4" data-editable="true">
+                                擅長搭建團隊與客戶之間的溝通橋樑，以同理心與結構化表達化解痛點，促進共識與長期合作。
+                            </p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-2.5 py-1 text-xs font-medium rounded-lg bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700" data-editable="true">客戶關係</span>
+                                <span class="px-2.5 py-1 text-xs font-medium rounded-lg bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700" data-editable="true">數位工具應用</span>
+                                <span class="px-2.5 py-1 text-xs font-medium rounded-lg bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700" data-editable="true">一對一諮詢</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. 經歷與精選作品區塊 -->
+        <section id="experience" class="py-20">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+                <div class="text-center max-w-2xl mx-auto space-y-3">
+                    <span class="text-sm font-bold tracking-wider uppercase text-violet-600 dark:text-violet-400">EXPERIENCE & PORTFOLIO</span>
+                    <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white" data-editable="true">經歷軌跡與精選作品</h2>
+                    <p class="text-sm sm:text-base text-slate-600 dark:text-slate-400" data-editable="true">點擊上方「編輯網頁」即可直接修改以下經歷與作品內容，客製化您的專屬履歷</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                    <!-- 左欄：經歷時間軸 -->
+                    <div class="space-y-6">
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2.5">
+                            <i data-lucide="briefcase" class="w-5 h-5 text-violet-600 dark:text-violet-400"></i>
+                            <span data-editable="true">職涯與專案經歷</span>
+                        </h3>
+
+                        <div class="relative pl-6 border-l-2 border-slate-200 dark:border-slate-800 space-y-8">
+                            <!-- 經歷 1 -->
+                            <div class="relative">
+                                <span class="absolute -left-[31px] top-1.5 w-3.5 h-3.5 rounded-full bg-violet-600 ring-4 ring-slate-50 dark:ring-slate-950"></span>
+                                <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-2">
+                                    <span class="inline-block px-2.5 py-0.5 text-xs font-semibold rounded-md bg-violet-50 dark:bg-violet-950 text-violet-600 dark:text-violet-300" data-editable="true">2024 - 至今</span>
+                                    <h4 class="text-lg font-bold text-slate-900 dark:text-white" data-editable="true">品牌專案總監 / 獨立顧問 (TTT Studio)</h4>
+                                    <p class="text-xs font-medium text-slate-500 dark:text-slate-400" data-editable="true">台灣 · 品牌整合與專案企劃</p>
+                                    <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed" data-editable="true">
+                                        主導多項品牌形象重塑、線上線下整合行銷與跨界合作專案，協助合作夥伴建立高辨識度的服務體驗與穩定客群。
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- 經歷 2 -->
+                            <div class="relative">
+                                <span class="absolute -left-[31px] top-1.5 w-3.5 h-3.5 rounded-full bg-slate-400 dark:bg-slate-600 ring-4 ring-slate-50 dark:ring-slate-950"></span>
+                                <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-2">
+                                    <span class="inline-block px-2.5 py-0.5 text-xs font-semibold rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300" data-editable="true">2020 - 2024</span>
+                                    <h4 class="text-lg font-bold text-slate-900 dark:text-white" data-editable="true">資深專案企劃與客戶經理</h4>
+                                    <p class="text-xs font-medium text-slate-500 dark:text-slate-400" data-editable="true">整合行銷與顧問有限公司</p>
+                                    <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed" data-editable="true">
+                                        負責重點客戶關係維護、年度專案規劃與跨部門協作執行，連續三年達成專案如期交付率與客戶高滿意度評價。
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 右欄：精選作品卡片 -->
+                    <div class="space-y-6">
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2.5">
+                            <i data-lucide="folder-kanban" class="w-5 h-5 text-fuchsia-600 dark:text-fuchsia-400"></i>
+                            <span data-editable="true">精選代表作品</span>
+                        </h3>
+
+                        <div class="space-y-5">
+                            <!-- 專案卡片 1 -->
+                            <div class="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm hover:shadow-md transition-all flex flex-col sm:flex-row gap-5 items-start">
+                                <div class="w-full sm:w-28 h-24 rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-600 flex items-center justify-center text-white flex-shrink-0">
+                                    <i data-lucide="gem" class="w-8 h-8"></i>
+                                </div>
+                                <div class="space-y-2 flex-1">
+                                    <div class="flex items-center justify-between gap-2">
+                                        <h4 class="text-lg font-bold text-slate-900 dark:text-white" data-editable="true">品牌識別與數位門面升級計畫</h4>
+                                        <span class="text-xs px-2 py-0.5 rounded bg-violet-500/10 text-violet-600 dark:text-violet-400 font-semibold" data-editable="true">精選案例</span>
+                                    </div>
+                                    <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed" data-editable="true">
+                                        從品牌故事梳理到視覺風格定調，打造一致性的數位溝通體驗，成功帶動諮詢轉換率顯著提升。
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- 專案卡片 2 -->
+                            <div class="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm hover:shadow-md transition-all flex flex-col sm:flex-row gap-5 items-start">
+                                <div class="w-full sm:w-28 h-24 rounded-xl bg-gradient-to-br from-indigo-500 to-cyan-600 flex items-center justify-center text-white flex-shrink-0">
+                                    <i data-lucide="calendar-check-2" class="w-8 h-8"></i>
+                                </div>
+                                <div class="space-y-2 flex-1">
+                                    <div class="flex items-center justify-between gap-2">
+                                        <h4 class="text-lg font-bold text-slate-900 dark:text-white" data-editable="true">跨領域主題策展與交流沙龍</h4>
+                                        <span class="text-xs px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-semibold" data-editable="true">活動統籌</span>
+                                    </div>
+                                    <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed" data-editable="true">
+                                        串聯多位產業講師與合作品牌，規劃系列主題工作坊與社群交流活動，累計吸引數百位參與者並獲得熱烈迴響。
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. 相關資訊與聯絡方式區塊 -->
+        <section id="contact" class="py-20 bg-white dark:bg-slate-900/50 border-t border-slate-200/70 dark:border-slate-800/70">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                    <!-- 左側：聯絡資訊卡片與一鍵複製 -->
+                    <div class="lg:col-span-5 space-y-6">
+                        <div class="space-y-3">
+                            <span class="text-sm font-bold tracking-wider uppercase text-violet-600 dark:text-violet-400">CONTACT INFO</span>
+                            <h2 class="text-3xl font-bold text-slate-900 dark:text-white" data-editable="true">與蕭秀靜 TTT 聯繫</h2>
+                            <p class="text-sm sm:text-base text-slate-600 dark:text-slate-400 leading-relaxed" data-editable="true">
+                                歡迎專案合作、品牌諮詢或任何想法交流！您可以一鍵複製下方聯絡資訊，或直接透過右側表單傳送訊息給我。
+                            </p>
+                        </div>
+
+                        <div class="space-y-4">
+                            <!-- Email 項目 -->
+                            <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3">
+                                <div class="flex items-center gap-3.5 min-w-0">
+                                    <div class="w-10 h-10 rounded-xl bg-violet-600/10 text-violet-600 dark:text-violet-400 flex items-center justify-center flex-shrink-0">
+                                        <i data-lucide="mail" class="w-5 h-5"></i>
+                                    </div>
+                                    <div class="min-w-0">
+                                        <p class="text-xs text-slate-500 dark:text-slate-400">電子郵件 Email</p>
+                                        <p id="emailText" class="text-sm font-bold text-slate-900 dark:text-white truncate" data-editable="true">xiujing.ttt@example.com</p>
+                                    </div>
+                                </div>
+                                <button onclick="copyText('emailText', '電子郵件')" class="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 hover:bg-violet-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-200 flex items-center gap-1.5 flex-shrink-0 transition-colors">
+                                    <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                                    複製
+                                </button>
+                            </div>
+
+                            <!-- 電話 / LINE 項目 -->
+                            <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3">
+                                <div class="flex items-center gap-3.5 min-w-0">
+                                    <div class="w-10 h-10 rounded-xl bg-emerald-600/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center flex-shrink-0">
+                                        <i data-lucide="message-circle" class="w-5 h-5"></i>
+                                    </div>
+                                    <div class="min-w-0">
+                                        <p class="text-xs text-slate-500 dark:text-slate-400">聯絡電話 / LINE ID</p>
+                                        <p id="phoneText" class="text-sm font-bold text-slate-900 dark:text-white truncate" data-editable="true">0912-345-678 / LINE: xiao_ttt</p>
+                                    </div>
+                                </div>
+                                <button onclick="copyText('phoneText', '電話與 LINE 資訊')" class="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 hover:bg-emerald-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-200 flex items-center gap-1.5 flex-shrink-0 transition-colors">
+                                    <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                                    複製
+                                </button>
+                            </div>
+
+                            <!-- 所在地區 -->
+                            <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center gap-3.5">
+                                <div class="w-10 h-10 rounded-xl bg-fuchsia-600/10 text-fuchsia-600 dark:text-fuchsia-400 flex items-center justify-center flex-shrink-0">
+                                    <i data-lucide="map-pin" class="w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400">服務地區 Location</p>
+                                    <p class="text-sm font-bold text-slate-900 dark:text-white" data-editable="true">台灣 · 全區服務（支援實體與線上會議）</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 右側：互動式快速留言表單 -->
+                    <div class="lg:col-span-7">
+                        <div class="p-6 sm:p-8 rounded-3xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+                            <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">快速留言給蕭秀靜 TTT</h3>
+                            <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mb-6">填寫下方欄位，可一鍵複製格式化留言貼到 LINE，或直接開啟郵件軟體寄送。</p>
+
+                            <form id="contactForm" class="space-y-4">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div>
+                                        <label for="senderName" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">您的稱呼 *</label>
+                                        <input type="text" id="senderName" required placeholder="例如：林小姐 / 陳先生"
+                                               class="w-full px-4 py-2.5 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500">
+                                    </div>
+                                    <div>
+                                        <label for="senderContact" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">您的聯絡方式 (Email / LINE) *</label>
+                                        <input type="text" id="senderContact" required placeholder="方便回覆您的方式"
+                                               class="w-full px-4 py-2.5 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500">
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label for="messageTopic" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">諮詢主題</label>
+                                    <select id="messageTopic" class="w-full px-4 py-2.5 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500">
+                                        <option value="專案合作諮詢">專案合作諮詢</option>
+                                        <option value="品牌企劃與顧問服務">品牌企劃與顧問服務</option>
+                                        <option value="活動與跨界交流">活動與跨界交流</option>
+                                        <option value="其他事項">其他事項</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label for="messageContent" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">訊息內容 *</label>
+                                    <textarea id="messageContent" rows="4" required placeholder="請簡述您的需求或想交流的內容..."
+                                              class="w-full px-4 py-2.5 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500"></textarea>
+                                </div>
+
+                                <div class="pt-2 flex flex-wrap items-center gap-3">
+                                    <button type="submit" class="px-6 py-3 rounded-xl bg-violet-600 hover:bg-violet-700 text-white text-sm font-semibold shadow-md shadow-violet-600/20 flex items-center gap-2 transition-all">
+                                        <i data-lucide="mail-plus" class="w-4 h-4"></i>
+                                        <span>透過郵件軟體寄送</span>
+                                    </button>
+                                    <button type="button" id="copyFormBtn" class="px-5 py-3 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-sm font-semibold flex items-center gap-2 transition-all">
+                                        <i data-lucide="clipboard-check" class="w-4 h-4"></i>
+                                        <span>複製留言內容 (貼至 LINE)</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 頁尾 -->
+    <footer class="py-8 border-t border-slate-200 dark:border-slate-800 text-center text-sm text-slate-500 dark:text-slate-400">
+        <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p data-editable="true">© 2026 蕭秀靜 TTT (Xiao Xiu-Jing TTT). All rights reserved.</p>
+            <p class="text-xs">支援即時文字編輯與單一 HTML 檔案匯出</p>
+        </div>
+    </footer>
+
+    <!-- 自訂更換頭像網址 Modal（取代 prompt） -->
+    <div id="avatarModal" class="hidden fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between">
+                <h3 class="text-lg font-bold text-slate-900 dark:text-white">更換個人大頭貼網址</h3>
+                <button id="closeAvatarModal" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <p class="text-xs text-slate-500 dark:text-slate-400">請貼上您的個人照片網路圖片連結 (URL)，套用後點擊「匯出 HTML」即可永久保存。</p>
+            <input type="url" id="avatarUrlInput" placeholder="https://example.com/my-photo.jpg"
+                   class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500">
+            <div class="flex justify-end gap-2 pt-2">
+                <button id="cancelAvatarBtn" class="px-4 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">取消</button>
+                <button id="saveAvatarBtn" class="px-4 py-2 rounded-xl text-sm font-semibold bg-violet-600 hover:bg-violet-700 text-white">套用照片</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 全域提示訊息 Toast（取代 alert） -->
+    <div id="toastNotification" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 pointer-events-none transition-all duration-300">
+        <div class="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-4 py-3 rounded-xl shadow-xl flex items-center gap-2.5 text-sm font-medium">
+            <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 dark:text-emerald-600"></i>
+            <span id="toastMessage">操作成功</span>
+        </div>
+    </div>
+
+    <script>
+        // 初始化 Lucide 圖示
+        lucide.createIcons();
+
+        // 顯示提示訊息函數
+        let toastTimer;
+        function showToast(message) {
+            const toast = document.getElementById('toastNotification');
+            const toastMsg = document.getElementById('toastMessage');
+            toastMsg.textContent = message;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        // 1. 深淺色模式切換
+        const themeToggle = document.getElementById('themeToggle');
+        const htmlEl = document.documentElement;
+
+        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            htmlEl.classList.add('dark');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            htmlEl.classList.toggle('dark');
+            localStorage.setItem('theme', htmlEl.classList.contains('dark') ? 'dark' : 'light');
+        });
+
+        // 2. 一鍵複製聯絡資訊（相容 iframe 環境）
+        function copyToClipboardFallback(text, successMsg) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                showToast(successMsg);
+            } catch (err) {
+                showToast('複製失敗，請手動選取複製');
+            }
+            document.body.removeChild(textarea);
+        }
+
+        function copyText(elementId, label) {
+            const text = document.getElementById(elementId).innerText.trim();
+            copyToClipboardFallback(text, `已複製${label}：${text}`);
+        }
+
+        // 3. 互動式聯絡表單處理
+        const contactForm = document.getElementById('contactForm');
+        const copyFormBtn = document.getElementById('copyFormBtn');
+
+        function getFormattedInquiry() {
+            const name = document.getElementById('senderName').value.trim() || '訪客';
+            const contact = document.getElementById('senderContact').value.trim() || '未提供';
+            const topic = document.getElementById('messageTopic').value;
+            const content = document.getElementById('messageContent').value.trim();
+            return `你好 蕭秀靜 TTT：\n\n【諮詢主題】${topic}\n【我的稱呼】${name}\n【聯絡方式】${contact}\n【訊息內容】\n${content}`;
+        }
+
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const targetEmail = document.getElementById('emailText').innerText.trim();
+            const topic = document.getElementById('messageTopic').value;
+            const body = encodeURIComponent(getFormattedInquiry());
+            const subject = encodeURIComponent(`[個人網站諮詢] ${topic}`);
+            window.location.href = `mailto:${targetEmail}?subject=${subject}&body=${body}`;
+            showToast('正在為您開啟預設郵件軟體...');
+        });
+
+        copyFormBtn.addEventListener('click', () => {
+            const content = document.getElementById('messageContent').value.trim();
+            if (!content) {
+                showToast('請先輸入訊息內容再複製喔！');
+                return;
+            }
+            copyToClipboardFallback(getFormattedInquiry(), '已複製完整留言格式，可直接貼上至 LINE 傳送！');
+        });
+
+        // 4. 即時編輯模式與匯出更新後的 HTML 功能
+        const editModeBtn = document.getElementById('editModeBtn');
+        const editModeText = document.getElementById('editModeText');
+        const editToolbar = document.getElementById('editToolbar');
+        const editableElements = document.querySelectorAll('[data-editable="true"]');
+        let isEditMode = false;
+
+        editModeBtn.addEventListener('click', () => {
+            isEditMode = !isEditMode;
+            document.body.classList.toggle('edit-mode-active', isEditMode);
+            editToolbar.classList.toggle('hidden', !isEditMode);
+
+            editableElements.forEach(el => {
+                el.contentEditable = isEditMode ? 'true' : 'false';
+            });
+
+            if (isEditMode) {
+                editModeText.textContent = '完成編輯';
+                editModeBtn.classList.replace('bg-slate-900', 'bg-emerald-600');
+                editModeBtn.classList.replace('dark:bg-violet-600', 'dark:bg-emerald-600');
+                showToast('已進入編輯模式，點擊文字即可修改');
+            } else {
+                editModeText.textContent = '編輯網頁';
+                editModeBtn.classList.replace('bg-emerald-600', 'bg-slate-900');
+                editModeBtn.classList.replace('dark:bg-emerald-600', 'dark:bg-violet-600');
+                showToast('已結束編輯預覽');
+            }
+        });
+
+        // 更換大頭貼 Modal 控制
+        const avatarModal = document.getElementById('avatarModal');
+        const changeAvatarBtn = document.getElementById('changeAvatarBtn');
+        const closeAvatarModal = document.getElementById('closeAvatarModal');
+        const cancelAvatarBtn = document.getElementById('cancelAvatarBtn');
+        const saveAvatarBtn = document.getElementById('saveAvatarBtn');
+        const avatarUrlInput = document.getElementById('avatarUrlInput');
+        const profileAvatar = document.getElementById('profileAvatar');
+
+        function toggleAvatarModal(show) {
+            avatarModal.classList.toggle('hidden', !show);
+            if (show) {
+                avatarUrlInput.value = profileAvatar.src;
+                avatarUrlInput.focus();
+            }
+        }
+
+        changeAvatarBtn.addEventListener('click', () => toggleAvatarModal(true));
+        closeAvatarModal.addEventListener('click', () => toggleAvatarModal(false));
+        cancelAvatarBtn.addEventListener('click', () => toggleAvatarModal(false));
+
+        saveAvatarBtn.addEventListener('click', () => {
+            const newUrl = avatarUrlInput.value.trim();
+            if (newUrl) {
+                profileAvatar.src = newUrl;
+                toggleAvatarModal(false);
+                showToast('已更新大頭貼圖片！');
+            } else {
+                showToast('請輸入有效的圖片網址');
+            }
+        });
+
+        // 匯出更新後的單一 HTML 檔案（支援頂部導覽列與編輯工具列按鈕）
+        function exportStandaloneHtml() {
+            const clonedDoc = document.documentElement.cloneNode(true);
+            const clonedBody = clonedDoc.querySelector('body');
+            clonedBody.classList.remove('edit-mode-active');
+
+            const clonedToolbar = clonedDoc.querySelector('#editToolbar');
+            if (clonedToolbar) clonedToolbar.classList.add('hidden');
+
+            const clonedEditText = clonedDoc.querySelector('#editModeText');
+            if (clonedEditText) clonedEditText.textContent = '編輯網頁';
+
+            const clonedEditBtn = clonedDoc.querySelector('#editModeBtn');
+            if (clonedEditBtn) {
+                clonedEditBtn.classList.remove('bg-emerald-600', 'dark:bg-emerald-600');
+                clonedEditBtn.classList.add('bg-slate-900', 'dark:bg-violet-600');
+            }
+
+            clonedDoc.querySelectorAll('[data-editable="true"]').forEach(el => {
+                el.removeAttribute('contenteditable');
+            });
+
+            // 還原 Lucide 圖示原始 <i> 標籤，避免匯出後重新載入時重複渲染 SVG
+            clonedDoc.querySelectorAll('svg.lucide').forEach(svg => {
+                const iconName = svg.getAttribute('data-lucide');
+                if (iconName) {
+                    const iTag = document.createElement('i');
+                    iTag.setAttribute('data-lucide', iconName);
+                    iTag.setAttribute('class', svg.getAttribute('class').replace('lucide ', ''));
+                    svg.replaceWith(iTag);
+                }
+            });
+
+            const finalHtml = '<!DOCTYPE html>\n' + clonedDoc.outerHTML;
+            const blob = new Blob([finalHtml], { type: 'text/html;charset=utf-8' });
+            const downloadLink = document.createElement('a');
+            downloadLink.href = URL.createObjectURL(blob);
+            downloadLink.download = 'xiao_xiujing_ttt_portfolio.html';
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+            URL.revokeObjectURL(downloadLink.href);
+
+            showToast('已成功匯出 xiao_xiujing_ttt_portfolio.html！');
+        }
+
+        document.getElementById('exportHtmlBtn').addEventListener('click', exportStandaloneHtml);
+        document.getElementById('headerExportBtn').addEventListener('click', exportStandaloneHtml);
+    </script>
+</body>
+</html>
